@@ -1,23 +1,27 @@
 'use strict'
 
+// Deps
 import 'app/adaptors/server/svg4everybody';
 import React from 'react';
-//React component will manage all of your changes to the document head
-import Meta from "react-helmet";
-import TransitionManager from 'react-transition-manager';
-import classnames from 'classnames';
-import get from 'lodash/object/get';
-import find from 'lodash/collection/find';
-import includes from 'lodash/collection/includes';
+import Meta from "react-helmet"; //React component will manage all of your changes to the document head
+import TransitionManager from 'react-transition-manager'; //smooth page changes which can be tied to the browser history
+import classnames from 'classnames'; //A simple javascript utility for conditionally joining classNames together.
+import get from 'lodash/object/get'; //Lodash is a toolkit of Javascript functions that provides clean, performant methods for manipulating objects and collections. It is a "fork" of the Underscore library and provides additional functionality as well as some serious performance improvements. If you aren't using Lodash, you should be.
+import find from 'lodash/collection/find';//Lodash
+import includes from 'lodash/collection/includes';//Lodash
 
 // TODO: see if there's a better way to get fonts in
 import 'app/adaptors/server/localfont';
-
+//addapters are all empty?
 import window from 'app/adaptors/server/window';
-import 'app/lib/animate';
+import 'app/lib/animate'; /*a tiny library that helps you write smooth CSS-powered animations in JavaScript.
+See a quick demo of 500 elements animating at playground.deaxon.com/js/animate.*/
 
-import Store from 'app/flux/store';
+import Store from 'app/flux/store';/*Flux:APPLICATION ARCHITECTURE FOR BUILDING USER INTERFACES*/
 import Nulls from 'app/flux/nulls';
+
+//Reusable page stuff
+//devs need popups
 import PageContainer from 'app/components/page-container';
 import Navigation from 'app/components/navigation';
 import Footer from 'app/components/footer';
@@ -30,6 +34,7 @@ import BlogCategories from 'app/components/blog-categories';
 import NavigationOverlay from 'app/components/navigation-overlay';
 import PageLoader from 'app/components/page-loader';
 
+//Individual Pages
 const pageMap = {
   'home': require('app/components/home'),
   'what-we-do': require('app/components/what-we-do'),
@@ -46,17 +51,35 @@ const pageMap = {
 const spinnerBlacklist = ['legal', 'blog/search-results'];
 
 const App = React.createClass({
-  getInitialState() {
+
+  getInitialState() {/*Invoked once before the component is mounted. The return value will be used as the initial value of this.state. You should initialize state in the constructor when using ES6 classes,
+    and define the getInitialState method when using React.createClass*/
     return this.props.state;
   },
   componentDidMount() {
+    /*Invoked once, only on the client (not on the server), immediately after the initial rendering occurs.
+    At this point in the lifecycle, you can access any refs to your children (e.g., to access the underlying DOM
+    representation). The componentDidMount() method of child components is invoked before that of parent components.
+    If you want to integrate with other JavaScript frameworks, set timers using setTimeout or setInterval, or
+    send AJAX requests, perform those operations in this method.*/
     Store.on('change', this.onChangeStore);
+    /*Store is attached to app/flux/store*/
+    /*this.onChangeStore executes: this.setState(state); where state is a param of the function*/
   },
   componentWillUnmount() {
+    /*Invoked immediately before a component is unmounted from the DOM.
+      Perform any necessary cleanup in this method, such as invalidating timers or
+       cleaning up any DOM elements that were created in componentDidMount*/
     Store.removeListener('change', this.onChangeStore);
+    /*Store is attached to app/flux/store*/
+    /*this.onChangeStore executes: this.setState(state); where state is a param of the function*/
   },
   onChangeStore(state) {
     this.setState(state);
+    /*setState() -A common way to inform React of a data change is by calling setState(data, callback).
+        This method merges data into this.state and re-renders the component. When the component finishes
+        re-rendering, the optional callback is called. Most of the time you'll never need to provide a
+        callback since React will take care of keeping your UI up-to-date for you.*/
   },
   showTakeover() {
     const { currentPage, takeover } = this.state;
