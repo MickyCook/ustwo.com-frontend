@@ -2,6 +2,7 @@
 
 import 'app/adaptors/server/svg4everybody';
 import React from 'react';
+//React component will manage all of your changes to the document head
 import Meta from "react-helmet";
 import TransitionManager from 'react-transition-manager';
 import classnames from 'classnames';
